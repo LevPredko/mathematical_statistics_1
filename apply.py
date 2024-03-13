@@ -32,6 +32,14 @@ def generate_midpoint_array(file_path): # ВАРІАЦІЙНИЙ РЯД ДЛЯ �
     return midpoint_array
 
 
+
+def swing(file_path): # РОЗМАХ
+    numbers = variation_series(file_path)
+    minValue = min(numbers)
+    maxValue = max(numbers)
+    return maxValue - minValue
+
+
 def average_discrete(file_path): # СЕРЕДНЄ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     numbers = variation_series(file_path)
     average_num = sum(numbers) / len(numbers)
@@ -76,6 +84,7 @@ def mediana_continuouse(file_path): # МЕДІАНА ДЛЯ НЕПЕРЕРВНО
         return ((middle1 + middle2) / 2)
     else:
         return numbers[len(numbers) // 2]
+
 
 def variance_discrete(file_path): # ВАРІАНСА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     numbers = variation_series(file_path)
@@ -159,17 +168,6 @@ def quantile_continuouse(file_path, q): # КВАНТИЛЬ ДЛЯ НЕПЕРЕР
     return quantile_value
 
 
-def interquartile_range_discrete(file_path):
-    q1, _, q3 = quartiles_discrete(file_path)
-    iqr = q3 - q1
-    return iqr
-
-
-def interquartile_range_continuous(file_path):
-    q1, _, q3 = quartiles_continuouse(file_path)
-    iqr = q3 - q1
-    return iqr
-
 
 def quartiles_discrete(file_path): # КВАРТИЛЬ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     q1 = quantile_discrete(file_path, 0.25)
@@ -185,6 +183,18 @@ def quartiles_continuouse(file_path): # КВАРТИЛЬ ДЛЯ НЕПЕРЕРВ
     return q1, q2, q3
 
 
+def interquartile_range_discrete(file_path): # ІНТЕРКВАРТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
+    q1, _, q3 = quartiles_discrete(file_path)
+    iqr = q3 - q1
+    return iqr
+
+
+def interquartile_range_continuous(file_path): # ІНТЕРКВАРТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
+    q1, _, q3 = quartiles_continuouse(file_path)
+    iqr = q3 - q1
+    return iqr
+
+
 def octile_discrete(file_path): # ОКТИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     octiles = [quantile_discrete(file_path, i / 8) for i in range(1, 8)]
     return octiles
@@ -193,6 +203,18 @@ def octile_discrete(file_path): # ОКТИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМ�
 def octile_continuouse(file_path): # ОКТИЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
     octiles = [quantile_continuouse(file_path, i / 8) for i in range(1, 8)]
     return octiles
+
+
+def interoctile_range_discrete(file_path): # ІНТЕРОКТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
+    octiles = octile_discrete(file_path)
+    iqr = octiles[-1] - octiles[0]
+    return iqr
+
+
+def interoctile_range_continuous(file_path): # ІНТЕРОКТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
+    octiles = octile_continuouse(file_path)
+    iqr = octiles[-1] - octiles[0]
+    return iqr
 
 
 def decile_discrete(file_path): # ДЕЦИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
@@ -205,6 +227,17 @@ def decile_continuouse(file_path): # ДЕЦИЛІ ДЛЯ НЕПЕРЕРВНОЇ 
     return deciles
 
 
+def interdecile_range_discrete(file_path): # ІНТЕРДЕЦИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
+    deciles = decile_discrete(file_path)
+    idr = deciles[-1] - deciles[0]
+    return idr
+
+def interdecile_range_continuous(file_path):  # ІНТЕРДЕЦИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
+    deciles = decile_continuouse(file_path)
+    idr = deciles[-1] - deciles[0]
+    return idr
+
+
 def centile_discrete(file_path): # ЦЕНТИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     centiles = [quantile_discrete(file_path, i / 100) for i in range(1, 100)]
     return centiles
@@ -215,6 +248,17 @@ def centile_continuouse(file_path): # ЦЕНТИЛІ ДЛЯ НЕПЕРЕРВНО
     return centiles
 
 
+def intercentile_range_discrete(file_path): # ІНТЕРЦЕНТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
+    centiles = centile_discrete(file_path)
+    icr = centiles[-1] - centiles[0]
+    return icr
+
+def intercentile_range_continuous(file_path): # ІНТЕРЦЕНТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
+    centiles = centile_continuouse(file_path)
+    icr = centiles[-1] - centiles[0]
+    return icr
+
+
 def millesile_discrete(file_path): # МІЛІЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     millesiles = [quantile_discrete(file_path, i / 1000) for i in range(1, 1000)]
     return millesiles
@@ -223,6 +267,18 @@ def millesile_discrete(file_path): # МІЛІЛІ ДЛЯ ДИСКРЕТНОЇ З
 def millesile_continuouse(file_path): # МІЛІЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
     millesiles = [quantile_continuouse(file_path, i / 1000) for i in range(1, 1000)]
     return millesiles
+
+
+def intermillesile_range_discrete(file_path): # ІНТЕРМІЛІЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
+    millesiles = millesile_discrete(file_path)
+    imr = millesiles[-1] - millesiles[0]
+    return imr
+
+
+def intermillesile_range_continuous(file_path): # ІНТЕРМІЛІЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
+    millesiles = millesile_continuouse(file_path)
+    imr = millesiles[-1] - millesiles[0]
+    return imr
 
 
 def moment_discrete(file_path, x, k): # МОМЕНТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
@@ -412,6 +468,7 @@ if __name__ == '__main__':
    print("ВИБІРКА: ",read_from_file(FILE))
    print("ВАРІАЦІЙНИЙ РЯД ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",variation_series(FILE))
    print("СЕРЕДНЄ ЗНАЧЧЕННЯ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",average_discrete(FILE))
+   print("РОЗМАХ: ", swing(FILE))
    print("МОДА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", moda_discrete(FILE))
    print("МЕДІАНА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", mediana_discrete(FILE))
    print("ВАРІАНСА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",variance_discrete(FILE))
@@ -421,13 +478,17 @@ if __name__ == '__main__':
    print("СТАНДАРТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",standard_discrete(FILE))
    print("ВАРІАЦІЯ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",variation_discrete(FILE))
    print("КВАНТИЛЬ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ","\n\t\t\tQuantile at 0.3:", quantile_discrete(FILE, 0.3))
-   print("ІНТЕРКВАНТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", interquartile_range_discrete(FILE))
    print("КВАРТИЛЬ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ", "\n\t\t\tFirst, second (median), and third quartiles:", quartiles_discrete(FILE))
+   print("ІНТЕРКВАРТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", interquartile_range_discrete(FILE))
    print("ОКТИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",octile_discrete(FILE))
+   print("ІНТЕРОКТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",interoctile_range_discrete(FILE))
    print("ДЕЦИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",decile_discrete(FILE))
+   print("ІНТЕРДЕЦИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", interdecile_range_discrete(FILE))
    print("ЦЕНТИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",centile_discrete(FILE))
+   print("ІНТЕРЦЕНТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", intercentile_range_discrete(FILE))
    print("МІЛІЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",millesile_discrete(FILE))
-   print("ПЕРШИЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", moment_discrete(FILE, 0, 1))
+   print("ІНТЕРМІЛІЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", intermillesile_range_discrete(FILE))
+   print("ПЕРШИЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", moment_discrete(FILE,  0, 1))
    print("ДРУГИЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", moment_discrete(FILE, 0, 2))
    print("ТРЕТІЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", moment_discrete(FILE, 0, 3))
    print("ЧЕТВЕРТИЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", moment_discrete(FILE, 0, 4))
@@ -452,12 +513,16 @@ if __name__ == '__main__':
    print("СТАНДАРТ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", standard_continuouse(FILE))
    print("ВАРІАЦІЯ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", variation_continuouse(FILE))
    print("КВАНТИЛЬ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", "\n\t\t\tQuantile at 0.3:", quantile_continuouse(FILE, 0.3))
-   print("ІНТЕРКВАНТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", interquartile_range_continuous(FILE))
    print("КВАРТИЛЬ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", "\n\t\t\tFirst, second (median), and third quartiles:", quartiles_continuouse(FILE))
+   print("ІНТЕРКВАРТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", interquartile_range_continuous(FILE))
    print("ОКТИЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", octile_continuouse(FILE))
+   print("ІНТЕРОКТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", interoctile_range_continuous(FILE))
    print("ДЕЦИЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", decile_continuouse(FILE))
+   print("ІНТЕРДЕЦИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", interdecile_range_continuous(FILE))
    print("ЦЕНТИЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", centile_continuouse(FILE))
+   print("ІНТЕРЦЕНТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", intercentile_range_continuous(FILE))
    print("МІЛІЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", millesile_continuouse(FILE))
+   print("ІНТЕРМІЛІЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", intermillesile_range_continuous(FILE))
    print("ПЕРШИЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ",moment_continuouse(FILE, 0,1))
    print("ДРУГИЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ",moment_continuouse(FILE, 0,2))
    print("ТРЕТІЙ ПОЧАТКОВИЙ МОМЕНТ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ",moment_continuouse(FILE, 0,3))
@@ -478,7 +543,3 @@ if __name__ == '__main__':
    plot_continuous_frequency_histogram(bin_edges, hist)
 
    plot_absolute_frequency_discrete(FILE) # ДІАГРАМА АБСОЛЮТНИХ ЧАСТОТ
-
-
-
-
