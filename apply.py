@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 def read_from_file(file_path):
     try:
         with open(file_path, 'r') as file:
-            numbers = list(map(int, file.read().split(', ')))
+            numbers = list(map(int, file.read().split(',')))
             return numbers
     except FileNotFoundError:
         print(f"Файл '{file_path}' не знайдено.")
@@ -33,8 +33,15 @@ def generate_midpoint_array(file_path): # ВАРІАЦІЙНИЙ РЯД ДЛЯ �
 
 
 
-def swing(file_path): # РОЗМАХ
+def swing_discrete(file_path): # РОЗМАХ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     numbers = variation_series(file_path)
+    minValue = min(numbers)
+    maxValue = max(numbers)
+    return maxValue - minValue
+
+
+def swing_continuouse(file_path): # РОЗМАХ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
+    numbers = generate_midpoint_array(file_path)
     minValue = min(numbers)
     maxValue = max(numbers)
     return maxValue - minValue
@@ -148,137 +155,222 @@ def variation_continuouse(file_path): # ВАРІАЦІЯ ДЛЯ НЕПЕРЕРВ
 
 def quantile_discrete(file_path, q): # КВАНТИЛЬ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
     numbers = variation_series(file_path)
-    position = q * (len(numbers) - 1)
-    lower_index = int(position)
-    upper_index = lower_index + 1
-    lower_value = numbers[lower_index]
-    upper_value = numbers[upper_index]
-    quantile_value = lower_value + (position - lower_index) * (upper_value - lower_value)
-    return quantile_value
+    index = q * (len(numbers) / 100)
+
+    if index.is_integer():
+        return numbers[int(index)]
+    else:
+        return
 
 
 def quantile_continuouse(file_path, q): # КВАНТИЛЬ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
     numbers = generate_midpoint_array(file_path)
-    position = q * (len(numbers) - 1)
-    lower_index = int(position)
-    upper_index = lower_index + 1
-    lower_value = numbers[lower_index]
-    upper_value = numbers[upper_index]
-    quantile_value = lower_value + (position - lower_index) * (upper_value - lower_value)
-    return quantile_value
+    index = q * (len(numbers) / 100)
 
+    if index.is_integer():
+        return numbers[int(index)]
+    else:
+        return
 
 
 def quartiles_discrete(file_path): # КВАРТИЛЬ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    q1 = quantile_discrete(file_path, 0.25)
-    q2 = mediana_discrete(file_path)
-    q3 = quantile_discrete(file_path, 0.75)
+    q1 = quantile_discrete(file_path, 25)
+    q2 = quantile_discrete(file_path, 50)
+    q3 = quantile_discrete(file_path, 75)
+
     return q1, q2, q3
 
-
 def quartiles_continuouse(file_path): # КВАРТИЛЬ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    q1 = quantile_continuouse(file_path, 0.25)
-    q2 = mediana_continuouse(file_path)
-    q3 = quantile_continuouse(file_path, 0.75)
+    q1 = quantile_continuouse(file_path, 25)
+    q2 = quantile_continuouse(file_path, 50)
+    q3 = quantile_continuouse(file_path, 75)
+
     return q1, q2, q3
 
 
 def interquartile_range_discrete(file_path): # ІНТЕРКВАРТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    q1, _, q3 = quartiles_discrete(file_path)
-    iqr = q3 - q1
-    return iqr
+    q1 = quantile_discrete(file_path, 25)
+    q3 = quantile_discrete(file_path, 75)
+    try:
+        ior = q3 - q1
+    except(Exception):
+        ior = None
+
+    return ior
+
 
 
 def interquartile_range_continuous(file_path): # ІНТЕРКВАРТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    q1, _, q3 = quartiles_continuouse(file_path)
-    iqr = q3 - q1
-    return iqr
+    q1 = quantile_continuouse(file_path, 25)
+    q3 = quantile_continuouse(file_path, 75)
+    try:
+        ior = q3 - q1
+    except(Exception):
+        ior = None
+
+    return ior
 
 
 def octile_discrete(file_path): # ОКТИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    octiles = [quantile_discrete(file_path, i / 8) for i in range(1, 8)]
-    return octiles
+    o1 = quantile_discrete(file_path, 12.5)
+    o2 = quantile_discrete(file_path, 25)
+    o3 = quantile_discrete(file_path, 37.5)
+    o4 = quantile_discrete(file_path, 50)
+    o5 = quantile_discrete(file_path, 62.5)
+    o6 = quantile_discrete(file_path, 75)
+    o7 = quantile_discrete(file_path, 87.5)
+    return o1, o2, o3, o4, o5, o6, o7
 
 
 def octile_continuouse(file_path): # ОКТИЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    octiles = [quantile_continuouse(file_path, i / 8) for i in range(1, 8)]
-    return octiles
+    o1 = quantile_continuouse(file_path, 12.5)
+    o2 = quantile_continuouse(file_path, 25)
+    o3 = quantile_continuouse(file_path, 37.5)
+    o4 = quantile_continuouse(file_path, 50)
+    o5 = quantile_continuouse(file_path, 62.5)
+    o6 = quantile_continuouse(file_path, 75)
+    o7 = quantile_continuouse(file_path, 87.5)
+    return o1, o2, o3, o4, o5, o6, o7
 
 
 def interoctile_range_discrete(file_path): # ІНТЕРОКТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    octiles = octile_discrete(file_path)
-    iqr = octiles[-1] - octiles[0]
-    return iqr
+    o1 = quantile_discrete(file_path, 12.5)
+    o7 = quantile_discrete(file_path, 87.5)
+    try:
+        ior = o7 - o1
+    except(Exception ):
+        ior = None
+
+    return ior
 
 
 def interoctile_range_continuous(file_path): # ІНТЕРОКТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    octiles = octile_continuouse(file_path)
-    iqr = octiles[-1] - octiles[0]
-    return iqr
+    o1 = quantile_continuouse(file_path, 12.5)
+    o7 = quantile_continuouse(file_path, 87.5)
+    try:
+        ior = o7 - o1
+    except(Exception):
+        ior = None
+
+    return ior
 
 
 def decile_discrete(file_path): # ДЕЦИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    deciles = [quantile_discrete(file_path, i / 10) for i in range(1, 10)]
-    return deciles
+    d1 = quantile_discrete(file_path, 10)
+    d2 = quantile_discrete(file_path, 20)
+    d3 = quantile_discrete(file_path, 30)
+    d4 = quantile_discrete(file_path, 40)
+    d5 = quantile_discrete(file_path, 50)
+    d6 = quantile_discrete(file_path, 60)
+    d7 = quantile_discrete(file_path, 70)
+    d8 = quantile_discrete(file_path, 80)
+    d9 = quantile_discrete(file_path, 90)
+    return d1, d2, d3, d4, d5, d6, d7, d8, d9
 
 
 def decile_continuouse(file_path): # ДЕЦИЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    deciles = [quantile_continuouse(file_path, i / 10) for i in range(1, 10)]
-    return deciles
+    d1 = quantile_continuouse(file_path, 10)
+    d2 = quantile_continuouse(file_path, 20)
+    d3 = quantile_continuouse(file_path, 30)
+    d4 = quantile_continuouse(file_path, 40)
+    d5 = quantile_continuouse(file_path, 50)
+    d6 = quantile_continuouse(file_path, 60)
+    d7 = quantile_continuouse(file_path, 70)
+    d8 = quantile_continuouse(file_path, 80)
+    d9 = quantile_continuouse(file_path, 90)
+    return d1, d2, d3, d4, d5, d6, d7, d8, d9
 
 
 def interdecile_range_discrete(file_path): # ІНТЕРДЕЦИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    deciles = decile_discrete(file_path)
-    idr = deciles[-1] - deciles[0]
+    d1 = quantile_discrete(file_path, 10)
+    d9 = quantile_discrete(file_path, 90)
+    try:
+        idr = d9 - d1
+    except( Exception):
+        idr = None
     return idr
 
 def interdecile_range_continuous(file_path):  # ІНТЕРДЕЦИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    deciles = decile_continuouse(file_path)
-    idr = deciles[-1] - deciles[0]
+    d1 = quantile_continuouse(file_path, 10)
+    d9 = quantile_continuouse(file_path, 90)
+    idr = d9 - d1
     return idr
 
 
 def centile_discrete(file_path): # ЦЕНТИЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    centiles = [quantile_discrete(file_path, i / 100) for i in range(1, 100)]
+    centiles = []
+    for i in range(1, 100):
+        centile = quantile_discrete(file_path, i)
+        centiles.append(centile)
     return centiles
 
 
 def centile_continuouse(file_path): # ЦЕНТИЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    centiles = [quantile_continuouse(file_path, i / 100) for i in range(1, 100)]
+    centiles = []
+    for i in range(1, 100):
+        centile = quantile_continuouse(file_path, i)
+        centiles.append(centile)
     return centiles
 
 
 def intercentile_range_discrete(file_path): # ІНТЕРЦЕНТИЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    centiles = centile_discrete(file_path)
-    icr = centiles[-1] - centiles[0]
-    return icr
+    c1 = quantile_discrete(file_path, 1)
+    c99 = quantile_discrete(file_path, 99)
+    try:
+        ior = c99 - c1
+    except(Exception):
+        ior = None
+
+    return ior
+
 
 def intercentile_range_continuous(file_path): # ІНТЕРЦЕНТИЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    centiles = centile_continuouse(file_path)
-    icr = centiles[-1] - centiles[0]
-    return icr
+    c1 = quantile_continuouse(file_path, 1)
+    c99 = quantile_continuouse(file_path, 99)
+    try:
+        ior = c99 - c1
+    except(Exception):
+        ior = None
+
+    return ior
 
 
 def millesile_discrete(file_path): # МІЛІЛІ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    millesiles = [quantile_discrete(file_path, i / 1000) for i in range(1, 1000)]
+    millesiles = []
+    for i in range(1, 1000):
+        millesile = quantile_discrete(file_path, i/10)
+        millesiles.append(millesile)
     return millesiles
 
 
 def millesile_continuouse(file_path): # МІЛІЛІ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    millesiles = [quantile_continuouse(file_path, i / 1000) for i in range(1, 1000)]
+    millesiles = []
+    for i in range(1, 1000):
+        millesile = quantile_continuouse(file_path, i/10)
+        millesiles.append(millesile)
     return millesiles
 
 
 def intermillesile_range_discrete(file_path): # ІНТЕРМІЛІЛЬНА ШИРОТА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
-    millesiles = millesile_discrete(file_path)
-    imr = millesiles[-1] - millesiles[0]
-    return imr
+    m1 = quantile_discrete(file_path, 1)
+    m1000 = quantile_discrete(file_path, 999)
+    try:
+        ior = m1000 - m1
+    except(Exception):
+        ior = None
+
+    return ior
 
 
 def intermillesile_range_continuous(file_path): # ІНТЕРМІЛІЛЬНА ШИРОТА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
-    millesiles = millesile_continuouse(file_path)
-    imr = millesiles[-1] - millesiles[0]
-    return imr
+    m1 = quantile_continuouse(file_path, 1)
+    m1000 = quantile_continuouse(file_path, 999)
+    try:
+        ior = m1000 - m1
+    except(Exception):
+        ior = None
+
+    return ior
 
 
 def moment_discrete(file_path, x, k): # МОМЕНТ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ
@@ -337,7 +429,7 @@ def calculate_num_bins(numbers): # КІЛЬКІСТЬ ВІДРІЗКІВ В ТА
 def continuous_frequency_table(file_path, print_table=True): #ТАБЛИЦЯ ЧАСТОТ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ
     numbers = variation_series(file_path)
     num_bins = calculate_num_bins(numbers)
-    bin_edges = np.linspace(-15, 15, num_bins+1) # Встановлюємо межі вручну
+    bin_edges = np.linspace(-15, 15, num_bins+1)
     hist, _ = np.histogram(numbers, bins=bin_edges)
     bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
     if(print_table):
@@ -376,6 +468,7 @@ def cumulative_distribution_function_discrete(file_path, print_table=True): #Ф�
 
 
     if print_table:
+
         for i, (value, cumulative_probability) in enumerate(cumulative_probabilities):
             if i == 0:
                 lower_bound = "-ထ"
@@ -395,7 +488,7 @@ def cumulative_distribution_function_discrete(file_path, print_table=True): #Ф�
 
         print("╚══════════╩═══════════════════════════╝")
 
-    return cumulative_probabilities
+
 
 
 def plot_discrete_polygon(file_path): #ПОЛІГОН ЧАСТОТ
@@ -464,11 +557,12 @@ def plot_continuous_frequency_histogram(bin_edges, hist): #ГІСТОГРАМА
 
 if __name__ == '__main__':
 
-   FILE = "/Users/lev/PycharmProjects/MathStatProject1/Vibirka"
-   print("ВИБІРКА: ",read_from_file(FILE))
+   FILE = "/Users/lev/Documents/programming/mathematical_statistics_1/Vibirka"
+   print("ВИБІРКА: ",read_from_file("/Users/lev/Documents/programming/mathematical_statistics_1/Vibirka"))
    print("ВАРІАЦІЙНИЙ РЯД ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",variation_series(FILE))
+   print("ДОВЖИНА ВАРІАЦІЙНОГО РЯДУ:",len(variation_series(FILE)))
    print("СЕРЕДНЄ ЗНАЧЧЕННЯ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",average_discrete(FILE))
-   print("РОЗМАХ: ", swing(FILE))
+   print("РОЗМАХ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", swing_discrete(FILE))
    print("МОДА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", moda_discrete(FILE))
    print("МЕДІАНА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ", mediana_discrete(FILE))
    print("ВАРІАНСА ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",variance_discrete(FILE))
@@ -504,6 +598,7 @@ if __name__ == '__main__':
 
    print("\nВАРІАЦІЙНИЙ РЯД ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", generate_midpoint_array(FILE))
    print("СЕРЕДНЄ ЗНАЧЧЕННЯ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", average_continuouse(FILE))
+   print("РОЗМАХ ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", swing_continuouse(FILE))
    print("МОДА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", moda_continuouse(FILE))
    print("МЕДІАНА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", round(mediana_continuouse(FILE)))
    print("ВАРІАНСА ДЛЯ НЕПЕРЕРВНОЇ ЗМІННОЇ: ", variance_continuouse(FILE))
