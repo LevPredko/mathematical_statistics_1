@@ -460,15 +460,12 @@ def cumulative_distribution_function_discrete(file_path, print_table=True): #Ф�
         print("║ Значення ║ Кумулятивна ймовірність   ║")
         print("╠══════════╬═══════════════════════════╣")
 
-
     for value, frequency in sorted(counts.items()):
         probability = frequency / total_count
         cumulative_probability += probability
         cumulative_probabilities.append((value, cumulative_probability))
 
-
     if print_table:
-
         for i, (value, cumulative_probability) in enumerate(cumulative_probabilities):
             if i == 0:
                 lower_bound = "-ထ"
@@ -482,12 +479,13 @@ def cumulative_distribution_function_discrete(file_path, print_table=True): #Ф�
                 upper_bound = value
                 sign = "≤"
 
-
             x = "x"
             print(f"║ {cumulative_probability:^8.2f} ║ {lower_bound:^7} < {x:^6}{sign}{upper_bound:^7} ║")
 
         print("╚══════════╩═══════════════════════════╝")
 
+    # Return the cumulative probabilities list
+    return cumulative_probabilities
 
 
 
