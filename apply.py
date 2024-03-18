@@ -554,8 +554,8 @@ def plot_continuous_frequency_histogram(bin_edges, hist): #ГІСТОГРАМА
 
 if __name__ == '__main__':
 
-   FILE = "/Users/lev/Documents/programming/mathematical_statistics_1/Vibirka"
-   print("ВИБІРКА: ",read_from_file("/Users/lev/Documents/programming/mathematical_statistics_1/Vibirka"))
+   FILE = "Vibirka"
+   print("ВИБІРКА: ",read_from_file(FILE))
    print("ВАРІАЦІЙНИЙ РЯД ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",variation_series(FILE))
    print("ДОВЖИНА ВАРІАЦІЙНОГО РЯДУ:",len(variation_series(FILE)))
    print("СЕРЕДНЄ ЗНАЧЧЕННЯ ДЛЯ ДИСКРЕТНОЇ ЗМІННОЇ: ",average_discrete(FILE))
