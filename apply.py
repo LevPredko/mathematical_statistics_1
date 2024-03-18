@@ -484,7 +484,6 @@ def cumulative_distribution_function_discrete(file_path, print_table=True): #Ф�
 
         print("╚══════════╩═══════════════════════════╝")
 
-    # Return the cumulative probabilities list
     return cumulative_probabilities
 
 
